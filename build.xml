@@ -1,0 +1,39 @@
+
+<project name="JerseyDemoApp" default="run" basedir=".">
+<!--  ===== Tomcat installation path =====  -->
+<property name="tomcat.home" value="/home/kowsi-nts0203/apache-tomcat-10.1.49"/>
+<!--  Maven project details  -->
+<property name="artifactId" value="JerseyDemoApp"/>
+<property name="version" value="1.0-SNAPSHOT"/>
+<!--  ====== Run mvn clean package ======  -->
+<target name="maven-package">
+<echo>Running Maven build...</echo>
+<exec executable="mvn" failonerror="true">
+<arg value="clean"/>
+<arg value="package"/>
+</exec>
+</target>
+<!--  ====== Copy WAR to Tomcat webapps ======  -->
+<target name="deploy" depends="maven-package">
+<mkdir dir="/home/kowsi-nts0203/apache-tomcat-10.1.49/webapps"/>
+<copy file="target/JerseyDemoApp.war" todir="/home/kowsi-nts0203/apache-tomcat-10.1.49/webapps" overwrite="true"/>
+<echo>WAR deployed to Tomcat webapps folder.</echo>
+</target>
+<!--  ====== Start Tomcat ======  -->
+<target name="startserver">
+<echo>Starting Tomcat Server...</echo>
+<exec executable="/home/kowsi-nts0203/apache-tomcat-10.1.49/bin/startup.sh" osfamily="unix" failonerror="false"/>
+<exec executable="/home/kowsi-nts0203/apache-tomcat-10.1.49/bin/startup.bat" osfamily="windows" failonerror="false"/>
+</target>
+<!--  ====== Stop Tomcat ======  -->
+<target name="stopserver">
+<echo>Stopping Tomcat Server...</echo>
+<exec executable="/home/kowsi-nts0203/apache-tomcat-10.1.49/bin/shutdown.sh" osfamily="unix" failonerror="false"/>
+<exec executable="/home/kowsi-nts0203/apache-tomcat-10.1.49/bin/shutdown.bat" osfamily="windows" failonerror="false"/>
+</target>
+<!--  ===== run = mvn package + deploy + start server =====  -->
+<target name="run" depends="deploy,startserver">
+<echo>Application built, deployed, and server started.</echo>
+</target>
+</project>
+        
